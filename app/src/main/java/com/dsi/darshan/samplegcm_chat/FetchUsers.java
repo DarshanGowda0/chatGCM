@@ -79,7 +79,6 @@ public class FetchUsers extends AsyncTask<Void, Void, Void> {
 
     void parseJson(String data) {
 
-        String name,number,id;
 
         try {
             JSONArray jsonArray = new JSONArray(data);

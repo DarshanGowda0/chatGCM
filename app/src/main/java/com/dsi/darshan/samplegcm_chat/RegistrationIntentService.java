@@ -40,12 +40,14 @@ public class RegistrationIntentService extends IntentService {
     public RegistrationIntentService() {
         super(TAG);
     }
+    SharedPreferences sharedPreferences;
+
 
     @Override
     protected void onHandleIntent(Intent intent) {
         Log.d("testing","inside regService");
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
 
         name = intent.getStringExtra("name");
@@ -70,6 +72,7 @@ public class RegistrationIntentService extends IntentService {
 
             // TODO: Implement this method to send any registration to your app's servers.
             sendRegistrationToServer(token);
+            storeRegIDToken(token);
 
             // Subscribe to topic channels
             subscribeTopics(token);
@@ -89,6 +92,13 @@ public class RegistrationIntentService extends IntentService {
         Intent registrationComplete = new Intent(QuickstartPreferences.REGISTRATION_COMPLETE);
         LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);
     }
+
+    private void storeRegIDToken(String token) {
+
+        sharedPreferences.edit().putString(QuickstartPreferences.REG_ID,token).apply();
+    }
+
+
 
     /**
      * Persist registration to third-party servers.

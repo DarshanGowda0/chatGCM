@@ -46,7 +46,8 @@ public class ChatActivty extends AppCompatActivity {
         et = (EditText) findViewById(R.id.msgEd);
         setUpRecView();
         Intent in = getIntent();
-        id = in.getStringExtra(Adapter.USER_ID);
+        id = in.getStringExtra(QuickstartPreferences.RECEIVED_REG_ID);
+
         setUpBroadcastReciever();
     }
 
@@ -78,7 +79,7 @@ public class ChatActivty extends AppCompatActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
 
-                adapter.notifyItemInserted(messages.size()-1);
+                adapter.notifyItemInserted(messages.size() - 1);
             }
         };
 
@@ -148,10 +149,13 @@ public class ChatActivty extends AppCompatActivity {
                     httpURLConnection.setDoInput(true);
                     httpURLConnection.setDoOutput(true);
 
+                    SharedPreferences mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(ChatActivty.this);
+                    String regID = mSharedPreferences.getString(QuickstartPreferences.REG_ID, "reg id missing");
+
                     Uri.Builder builder = new Uri.Builder()
                             .appendQueryParameter("message", msg)
-                            .appendQueryParameter("regId", id);
-//                            .appendQueryParameter(HOME_ID, home_id);
+                            .appendQueryParameter("regId", id)
+                            .appendQueryParameter("senderId", regID);
 //            Log.d("pageno", "" + page_no);
 
                     String query = builder.build().getEncodedQuery();

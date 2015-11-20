@@ -14,12 +14,16 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by darshan on 12/11/15.
  */
 public class MyGcmListenerService extends GcmListenerService {
 
     private static final String TAG = "MyGcmListenerService";
+    String msg,receiverId;
 
     /**
      * Called when message is received.
@@ -36,6 +40,15 @@ public class MyGcmListenerService extends GcmListenerService {
         Log.d(TAG, "From: " + from);
         Log.d(TAG, "Message: " + message);
 
+
+        try {
+            JSONObject object = new JSONObject(message);
+            msg = object.getString("message");
+            receiverId = object.getString("senderId");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         if (from.startsWith("/topics/")) {
             // message received from some topic.
         } else {
@@ -54,8 +67,8 @@ public class MyGcmListenerService extends GcmListenerService {
          * In some cases it may be useful to show a notification indicating to the user
          * that a message was received.
          */
-        sendNotification(message);
-        notifyBroadcast(message);
+        sendNotification(msg);
+        notifyBroadcast(msg);
         // [END_EXCLUDE]
     }
 
@@ -76,8 +89,8 @@ public class MyGcmListenerService extends GcmListenerService {
      */
     private void sendNotification(String message) {
         Intent intent = new Intent(this, ChatActivty.class);
-//        intent.putExtra(Adapter.USER_ID,id);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra(QuickstartPreferences.RECEIVED_REG_ID,receiverId);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 

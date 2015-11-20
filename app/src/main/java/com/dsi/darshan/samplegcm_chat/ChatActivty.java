@@ -203,4 +203,11 @@ public class ChatActivty extends AppCompatActivity {
         }.execute();
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        messages.clear();
+
+    }
 }

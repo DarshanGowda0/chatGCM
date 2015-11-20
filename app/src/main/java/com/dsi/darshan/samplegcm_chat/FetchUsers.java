@@ -56,6 +56,7 @@ public class FetchUsers extends AsyncTask<Void, Void, Void> {
 
     public static String readStream(InputStream in) {
         BufferedReader reader = null;
+        mList.clear();
         StringBuffer response = new StringBuffer();
         try {
             reader = new BufferedReader(new InputStreamReader(in));

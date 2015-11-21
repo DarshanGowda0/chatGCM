@@ -4,9 +4,11 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -23,6 +25,15 @@ public class MyGcmListenerService extends GcmListenerService {
 
     private static final String TAG = "MyGcmListenerService";
     String msg,receiverId;
+    DbHelper dbHelper;
+    String to;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+    }
+
 
     /**
      * Called when message is received.
@@ -39,6 +50,10 @@ public class MyGcmListenerService extends GcmListenerService {
         Log.d(TAG, "From: " + from);
         Log.d(TAG, "Message: " + message);
 
+        dbHelper = new DbHelper(getApplicationContext());
+        dbHelper.getWritableDatabase();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        to = sharedPreferences.getString(Constants.REG_ID,"not available");
 
         try {
             JSONObject object = new JSONObject(message);
@@ -48,6 +63,9 @@ public class MyGcmListenerService extends GcmListenerService {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        dbHelper.insertMessage(msg,receiverId,to);
+
         if (from.startsWith("/topics/")) {
             // message received from some topic.
         } else {

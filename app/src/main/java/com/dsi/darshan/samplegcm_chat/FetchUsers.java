@@ -21,6 +21,11 @@ import java.util.ArrayList;
 public class FetchUsers extends AsyncTask<Void, Void, Void> {
 
     String TAG = "FetchUsers";
+    DbHelper dbHelper;
+
+    public FetchUsers(DbHelper dbHelper){
+        this.dbHelper = dbHelper;
+    }
 
     public static ArrayList<DataClass> mList = new ArrayList<>();
 
@@ -98,9 +103,22 @@ public class FetchUsers extends AsyncTask<Void, Void, Void> {
 
             }
 
+            addToDB();
 
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+
+
+
+    }
+
+    private void addToDB() {
+        Log.d(DbHelper.TAG,"calling addToDb");
+        for (int i = 0; i < FetchUsers.mList.size();i++){
+            dbHelper.insertUsers(FetchUsers.mList.get(i).name,
+                    FetchUsers.mList.get(i).id,
+                    FetchUsers.mList.get(i).number);
         }
 
     }

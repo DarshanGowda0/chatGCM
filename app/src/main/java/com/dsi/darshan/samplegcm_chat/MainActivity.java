@@ -35,14 +35,21 @@ public class MainActivity extends AppCompatActivity {
 
     RecyclerView recView;
     public static Adapter mAdapter;
+    DbHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.d(DbHelper.TAG, "calling db ");
+
+        dbHelper = new DbHelper(this);
+        dbHelper.getWritableDatabase();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setUpViews();
+//        addToDB();
 
 
     }
@@ -52,12 +59,14 @@ public class MainActivity extends AppCompatActivity {
         recView = (RecyclerView) findViewById(R.id.recView);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
         recView.setLayoutManager(layoutManager);
-        new FetchUsers().execute();
+        new FetchUsers(dbHelper).execute();
         mAdapter = new Adapter(MainActivity.this);
         recView.setAdapter(mAdapter);
 
 
     }
+
+
 
     private void doGcmSendUpstreamMessage() {
         final GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
@@ -89,7 +98,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }.execute(null, null, null);
     }
-
 
 
     @Override

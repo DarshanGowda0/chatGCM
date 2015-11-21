@@ -38,6 +38,8 @@ public class ChatActivty extends AppCompatActivity {
     MyAdapter adapter;
     String id;
     BroadcastReceiver mRegistrationBroadcastReceiver;
+    DbHelper dbHelper;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +49,8 @@ public class ChatActivty extends AppCompatActivity {
         setUpRecView();
         Intent in = getIntent();
         id = in.getStringExtra(Constants.RECEIVED_REG_ID);
-
+        dbHelper = new DbHelper(this);
+        dbHelper.getWritableDatabase();
         setUpBroadcastReciever();
     }
 
@@ -59,6 +62,7 @@ public class ChatActivty extends AppCompatActivity {
         SharedPreferences mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(ChatActivty.this);
         String myRegID = mSharedPreferences.getString(Constants.REG_ID, "reg id missing");
         sendmessageTask(msg,myRegID,id);
+        et.setText("");
     }
 
     @Override
@@ -185,6 +189,7 @@ public class ChatActivty extends AppCompatActivity {
 
 //                parseJson(Response);
                         Log.d("DARSHAN", Response);
+                        dbHelper.insertMessage(msg,from,to);
 //                parseJSON(Response);
 
                     } else {

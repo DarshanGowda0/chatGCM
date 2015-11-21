@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
@@ -75,7 +74,7 @@ public class MyGcmListenerService extends GcmListenerService {
     private void notifyBroadcast(String message) {
 
         ChatActivty.messages.add(message);
-        Intent mes = new Intent(QuickstartPreferences.MESSAGE_ARRIVED);
+        Intent mes = new Intent(Constants.MESSAGE_ARRIVED);
         LocalBroadcastManager.getInstance(this).sendBroadcast(mes);
 
 
@@ -89,7 +88,7 @@ public class MyGcmListenerService extends GcmListenerService {
      */
     private void sendNotification(String message) {
         Intent intent = new Intent(this, ChatActivty.class);
-        intent.putExtra(QuickstartPreferences.RECEIVED_REG_ID,receiverId);
+        intent.putExtra(Constants.RECEIVED_REG_ID,receiverId);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);

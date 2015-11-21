@@ -16,7 +16,7 @@ public class SplashActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences =
                 PreferenceManager.getDefaultSharedPreferences(this);
         final boolean sentToken = sharedPreferences
-                .getBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, false);
+                .getBoolean(Constants.SENT_TOKEN_TO_SERVER, false);
 
 
         Thread thread = new Thread(new Runnable() {

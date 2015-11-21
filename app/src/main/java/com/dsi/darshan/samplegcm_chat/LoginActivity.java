@@ -20,7 +20,6 @@ import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -119,7 +118,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 SharedPreferences sharedPreferences =
                         PreferenceManager.getDefaultSharedPreferences(context);
                 boolean sentToken = sharedPreferences
-                        .getBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, false);
+                        .getBoolean(Constants.SENT_TOKEN_TO_SERVER, false);
                 if (sentToken) {
                     showProgress(false);
                     Intent in = new Intent(LoginActivity.this,MainActivity.class);
@@ -260,7 +259,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onResume() {
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
-                new IntentFilter(QuickstartPreferences.REGISTRATION_COMPLETE));
+                new IntentFilter(Constants.REGISTRATION_COMPLETE));
 
     }
 

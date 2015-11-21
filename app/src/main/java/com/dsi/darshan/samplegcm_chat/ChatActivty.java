@@ -46,7 +46,7 @@ public class ChatActivty extends AppCompatActivity {
         et = (EditText) findViewById(R.id.msgEd);
         setUpRecView();
         Intent in = getIntent();
-        id = in.getStringExtra(QuickstartPreferences.RECEIVED_REG_ID);
+        id = in.getStringExtra(Constants.RECEIVED_REG_ID);
 
         setUpBroadcastReciever();
     }
@@ -56,7 +56,9 @@ public class ChatActivty extends AppCompatActivity {
         String msg = et.getText().toString();
         messages.add(msg);
         adapter.notifyItemInserted(messages.size() - 1);
-        sendmessageTask(msg, id);
+        SharedPreferences mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(ChatActivty.this);
+        String myRegID = mSharedPreferences.getString(Constants.REG_ID, "reg id missing");
+        sendmessageTask(msg,myRegID,id);
     }
 
     @Override
@@ -69,7 +71,7 @@ public class ChatActivty extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
-                new IntentFilter(QuickstartPreferences.MESSAGE_ARRIVED));
+                new IntentFilter(Constants.MESSAGE_ARRIVED));
 
     }
 
@@ -131,7 +133,7 @@ public class ChatActivty extends AppCompatActivity {
         }
     }
 
-    void sendmessageTask(final String msg, final String id) {
+    void sendmessageTask(final String msg, final String from,final String to) {
 
         new AsyncTask<Void, Void, Void>() {
             BufferedReader mBufferedInputStream;
@@ -149,13 +151,12 @@ public class ChatActivty extends AppCompatActivity {
                     httpURLConnection.setDoInput(true);
                     httpURLConnection.setDoOutput(true);
 
-                    SharedPreferences mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(ChatActivty.this);
-                    String regID = mSharedPreferences.getString(QuickstartPreferences.REG_ID, "reg id missing");
+
 
                     Uri.Builder builder = new Uri.Builder()
                             .appendQueryParameter("message", msg)
-                            .appendQueryParameter("regId", id)
-                            .appendQueryParameter("senderId", regID);
+                            .appendQueryParameter("regId", to)
+                            .appendQueryParameter("senderId", from);
 //            Log.d("pageno", "" + page_no);
 
                     String query = builder.build().getEncodedQuery();

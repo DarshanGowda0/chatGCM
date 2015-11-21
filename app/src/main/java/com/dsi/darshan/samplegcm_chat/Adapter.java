@@ -34,7 +34,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.Holder> {
             @Override
             public void onClick(View v) {
                 Intent in = new Intent(context,ChatActivty.class);
-                in.putExtra(QuickstartPreferences.RECEIVED_REG_ID,FetchUsers.mList.get(position).id);
+                in.putExtra(Constants.RECEIVED_REG_ID,FetchUsers.mList.get(position).id);
                 context.startActivity(in);
             }
         });

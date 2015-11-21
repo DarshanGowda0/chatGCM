@@ -76,7 +76,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL(insertQuery);
-        Log.d(TAG, "message: " + message + " inserted successfully");
+        Log.d(TAG, "message: " + message + " inserted successfully where from = "+from_id+" and to="+to_id);
 
         return true;
     }
@@ -84,14 +84,26 @@ public class DbHelper extends SQLiteOpenHelper {
     public ArrayList<String> getAllMessages(String from_id, String to_id) {
         ArrayList<String> array_list = new ArrayList<>();
 
+        Log.d(TAG,"from "+from_id);
+
         //hp = new HashMap();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery("select * from " + DATABASE_TABLE_MSGS +
-                " where " + FROM_ID + "="+"\"" + from_id+"\"" + " and " + TO_ID + "="+"\"" + to_id +"\""+ " order by "+MSG_ID, null);
+        Cursor res = db.rawQuery("select * from " + DATABASE_TABLE_MSGS
+                + " where " + FROM_ID + "="+"\"" + from_id
+                +"\"" + " and " + TO_ID + "="+"\"" + to_id +"\""+
+                " union select * from "+DATABASE_TABLE_MSGS+
+                " where "+FROM_ID+"="+"\""+to_id+"\""+
+                " and "+TO_ID+"="+"\""+from_id+"\""
+                + " order by "+MSG_ID
+                , null);
+        Log.d(TAG,"in cursor");
+
         res.moveToFirst();
+        Log.d(TAG, res.isAfterLast()+"");
 
         while (!res.isAfterLast()) {
             array_list.add(res.getString(res.getColumnIndex(MSG)));
+            Log.d(TAG,res.getString(res.getColumnIndex(MSG)));
             res.moveToNext();
         }
         return array_list;

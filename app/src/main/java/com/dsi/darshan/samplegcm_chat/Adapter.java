@@ -33,7 +33,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.Holder> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent in = new Intent(context,ChatActivty.class);
+                Intent in = new Intent(context,ChatActivity.class);
                 in.putExtra(Constants.RECEIVED_REG_ID,FetchUsers.mList.get(position).id);
                 context.startActivity(in);
             }

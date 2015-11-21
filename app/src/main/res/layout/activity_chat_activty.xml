@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.dsi.darshan.samplegcm_chat.ChatActivty">
+    xmlns:android.support.v7.recyclerview="http://schemas.android.com/apk/res-auto"
+    tools:context=".ChatActivity">
 
     <RelativeLayout
         android:orientation="horizontal"
@@ -15,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="SEND"
-            android:onClick="sendMessgae"
+            android:onClick="sendMessage"
             android:id="@+id/button"
             android:layout_alignBottom="@+id/msgEd"
             android:layout_alignParentRight="true"
@@ -39,6 +41,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/recViewChat"
+        android.support.v7.recyclerview:stackFromEnd ="true"
         android:layout_above="@+id/ll">
 
     </android.support.v7.widget.RecyclerView>

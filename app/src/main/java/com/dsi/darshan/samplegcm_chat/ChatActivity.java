@@ -31,7 +31,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class ChatActivty extends AppCompatActivity {
+public class ChatActivity extends AppCompatActivity {
 
     public static ArrayList<String> messages = new ArrayList<>();
     EditText et;
@@ -45,21 +45,33 @@ public class ChatActivty extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_activty);
+        dbHelper = new DbHelper(this);
+        dbHelper.getWritableDatabase();
         et = (EditText) findViewById(R.id.msgEd);
         setUpRecView();
         Intent in = getIntent();
         id = in.getStringExtra(Constants.RECEIVED_REG_ID);
-        dbHelper = new DbHelper(this);
-        dbHelper.getWritableDatabase();
-        setUpBroadcastReciever();
+        fetchMessages();
+
+        setUpBroadcastReceiver();
     }
 
-    public void sendMessgae(View view) {
+    private void fetchMessages() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String to = sharedPreferences.getString(Constants.REG_ID,"not available");
+        ArrayList<String> msg = dbHelper.getAllMessages(id, to);
+        for(String message: msg){
+            messages.add(message);
+        }
+        adapter.notifyDataSetChanged();
+    }
+
+    public void sendMessage(View view) {
 
         String msg = et.getText().toString();
         messages.add(msg);
         adapter.notifyItemInserted(messages.size() - 1);
-        SharedPreferences mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(ChatActivty.this);
+        SharedPreferences mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(ChatActivity.this);
         String myRegID = mSharedPreferences.getString(Constants.REG_ID, "reg id missing");
         sendmessageTask(msg,myRegID,id);
         et.setText("");
@@ -79,7 +91,7 @@ public class ChatActivty extends AppCompatActivity {
 
     }
 
-    private void setUpBroadcastReciever() {
+    private void setUpBroadcastReceiver() {
 
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {
             @Override
@@ -95,7 +107,7 @@ public class ChatActivty extends AppCompatActivity {
     private void setUpRecView() {
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recViewChat);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(ChatActivty.this);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(ChatActivity.this);
         recyclerView.setLayoutManager(layoutManager);
         adapter = new MyAdapter();
         recyclerView.setAdapter(adapter);
@@ -107,7 +119,7 @@ public class ChatActivty extends AppCompatActivity {
         @Override
         public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-            View view = LayoutInflater.from(ChatActivty.this).inflate(R.layout.single_user_card, parent, false);
+            View view = LayoutInflater.from(ChatActivity.this).inflate(R.layout.single_user_card, parent, false);
             return new Holder(view);
         }
 

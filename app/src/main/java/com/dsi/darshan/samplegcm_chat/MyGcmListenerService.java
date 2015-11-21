@@ -91,7 +91,7 @@ public class MyGcmListenerService extends GcmListenerService {
 
     private void notifyBroadcast(String message) {
 
-        ChatActivty.messages.add(message);
+        ChatActivity.messages.add(message);
         Intent mes = new Intent(Constants.MESSAGE_ARRIVED);
         LocalBroadcastManager.getInstance(this).sendBroadcast(mes);
 
@@ -105,7 +105,7 @@ public class MyGcmListenerService extends GcmListenerService {
      * @param message GCM message received.
      */
     private void sendNotification(String message) {
-        Intent intent = new Intent(this, ChatActivty.class);
+        Intent intent = new Intent(this, ChatActivity.class);
         intent.putExtra(Constants.RECEIVED_REG_ID,receiverId);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,

@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:android.support.v7.recyclerview="http://schemas.android.com/apk/res-auto"
-    tools:context=".ChatActivity">
+    tools:context="com.dsi.darshan.samplegcm_chat.ChatActivityListView">
 
     <RelativeLayout
         android:orientation="horizontal"
@@ -37,15 +36,17 @@
 
     </RelativeLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/recViewChat"
-        android.support.v7.recyclerview:stackFromEnd ="true"
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/listView"
         android:layout_above="@+id/ll"
+        android:divider="#00000000"
         >
 
-    </android.support.v7.widget.RecyclerView>
+    </ListView>
+
 
 
 </RelativeLayout>

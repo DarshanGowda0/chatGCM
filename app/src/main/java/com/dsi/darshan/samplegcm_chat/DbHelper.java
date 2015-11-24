@@ -46,8 +46,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 + USER_ID + " string, " + USER_NUMBER + " string primary key)";
 
         String createMessagesQuery = "create table " + DATABASE_TABLE_MSGS +
-                "(" + MSG_ID + " integer primary key autoincrement," + FROM_ID + " string," + TO_ID + " string," + MSG + " string,"+
-                MY_MSG+" integer)";
+                "(" + MSG_ID + " integer primary key autoincrement," + FROM_ID + " string," + TO_ID + " string," + MSG + " string," +
+                MY_MSG + " integer)";
         db.execSQL(createUsersQuery);
         Log.d(TAG, "users table created successfully");
         db.execSQL(createMessagesQuery);
@@ -66,24 +66,24 @@ public class DbHelper extends SQLiteOpenHelper {
     public boolean insertUsers(String name, String user_id, String number) {
         String insertQuery = "insert or replace into "
                 + DATABASE_TABLE_USERS + " (" + USERS_NAME + "," + USER_ID + "," + USER_NUMBER + ") values" +
-                "(" +"\""+ name +"\""+ "," +"\""+ user_id+"\"" + ","+"\"" + number+"\"" + ");";
+                "(" + "\"" + name + "\"" + "," + "\"" + user_id + "\"" + "," + "\"" + number + "\"" + ");";
 
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL(insertQuery);
-        Log.d(TAG, "user "+name+" inserted successfully");
+        Log.d(TAG, "user " + name + " inserted successfully");
 
         return true;
     }
 
-    public boolean insertMessage(String message, String from_id, String to_id,int me) {
+    public boolean insertMessage(String message, String from_id, String to_id, int me) {
 
         String insertQuery = "insert into "
                 + DATABASE_TABLE_MSGS + " (" + FROM_ID + "," + TO_ID + "," + MSG + "," + MY_MSG + ") values" +
-                "(" +"\""+ from_id +"\""+ ","+"\"" + to_id+"\"" + ","+"\"" + message +"\""+ ","+me+");";
+                "(" + "\"" + from_id + "\"" + "," + "\"" + to_id + "\"" + "," + "\"" + message + "\"" + "," + me + ");";
 
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL(insertQuery);
-        Log.d(TAG, "message: " + message + " inserted successfully where from = "+from_id+" and to="+to_id);
+        Log.d(TAG, "message: " + message + " inserted successfully where from = " + from_id + " and to=" + to_id);
 
         return true;
     }
@@ -91,32 +91,45 @@ public class DbHelper extends SQLiteOpenHelper {
     public ArrayList<MessageData> getAllMessages(String from_id, String to_id) {
         ArrayList<MessageData> array_list = new ArrayList<>();
 
-        Log.d(TAG,"from "+from_id);
+        Log.d(TAG, "from " + from_id);
 
         //hp = new HashMap();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery("select * from " + DATABASE_TABLE_MSGS
-                + " where " + FROM_ID + "="+"\"" + from_id
-                +"\"" + " and " + TO_ID + "="+"\"" + to_id +"\""+
-                " union select * from "+DATABASE_TABLE_MSGS+
-                " where "+FROM_ID+"="+"\""+to_id+"\""+
-                " and "+TO_ID+"="+"\""+from_id+"\""
-                + " order by "+MSG_ID
+                + " where " + FROM_ID + "=" + "\"" + from_id
+                + "\"" + " and " + TO_ID + "=" + "\"" + to_id + "\"" +
+                " union select * from " + DATABASE_TABLE_MSGS +
+                " where " + FROM_ID + "=" + "\"" + to_id + "\"" +
+                " and " + TO_ID + "=" + "\"" + from_id + "\""
+                + " order by " + MSG_ID
                 , null);
-        Log.d(TAG,"in cursor");
+        Log.d(TAG, "in cursor");
 
         res.moveToFirst();
-        Log.d(TAG, res.isAfterLast()+"");
+        Log.d(TAG, res.isAfterLast() + "");
 
         while (!res.isAfterLast()) {
             MessageData messageData = new MessageData();
             messageData.message = res.getString(res.getColumnIndex(MSG));
             messageData.me = res.getInt(res.getColumnIndex(MY_MSG));
             array_list.add(messageData);
-            Log.d(TAG,res.getString(res.getColumnIndex(MSG)));
+            Log.d(TAG, res.getString(res.getColumnIndex(MSG)));
             res.moveToNext();
         }
         return array_list;
+    }
+
+    public String getNameFromId(String id) {
+        String name = "not Known";
+        String query = "select * from "+DATABASE_TABLE_USERS+" where "+USER_ID+" = "+"\""+id+"\"";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery(query, null);
+        res.moveToFirst();
+        while ((!res.isAfterLast())){
+            name = res.getString(res.getColumnIndex(USERS_NAME));
+            res.moveToNext();
+        }
+        return name;
     }
 
 }

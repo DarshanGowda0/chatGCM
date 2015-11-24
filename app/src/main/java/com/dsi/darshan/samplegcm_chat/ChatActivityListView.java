@@ -10,8 +10,10 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -58,9 +60,17 @@ public class ChatActivityListView extends AppCompatActivity {
         setupListView();
         Intent in = getIntent();
         id = in.getStringExtra(Constants.RECEIVED_REG_ID);
+        setChatUserName(id);
         fetchMessages();
 
         setUpBroadcastReceiver();
+    }
+
+    private void setChatUserName(String id) {
+        String name = dbHelper.getNameFromId(id);
+        Log.d("DARSHAN",name);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(name);
     }
 
     public void sendMessage(View view) {

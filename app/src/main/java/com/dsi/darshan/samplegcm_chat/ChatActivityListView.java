@@ -61,7 +61,9 @@ public class ChatActivityListView extends AppCompatActivity {
         Intent in = getIntent();
         id = in.getStringExtra(Constants.RECEIVED_REG_ID);
         setChatUserName(id);
+        Log.d("DARSHAN", "" + messages.size());
         fetchMessages();
+        Log.d("DARSHAN", "" + messages.size());
 
         setUpBroadcastReceiver();
     }
@@ -115,6 +117,8 @@ public class ChatActivityListView extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
+        messages.clear();
+
     }
 
     @Override
@@ -135,6 +139,8 @@ public class ChatActivityListView extends AppCompatActivity {
         }
         adapter.notifyDataSetChanged();
         scrollMyListViewToBottom();
+        Log.d("DARSHAN", "" + messages.size());
+
     }
 
 
@@ -267,7 +273,6 @@ public class ChatActivityListView extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
 
-        messages.clear();
 
     }
 

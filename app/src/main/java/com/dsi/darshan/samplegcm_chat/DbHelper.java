@@ -2,9 +2,11 @@ package com.dsi.darshan.samplegcm_chat;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -18,7 +20,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "MyDb.db";
     public static final String DATABASE_TABLE_USERS = "users";
     public static final String DATABASE_TABLE_MSGS = "messages";
-    public static final int DATABASE_NO = 2;
+    public static final int DATABASE_NO = 3;
     public static final String USERS_NAME = "user_name";
     public static final String USER_ID = "user_id";
     public static final String USER_NUMBER = "user_number";
@@ -26,22 +28,26 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String FROM_ID = "from_id";
     public static final String TO_ID = "to_id";
     public static final String MSG = "msg";
+    public static final String MY_MSG = "my_msg_bool";
+    SharedPreferences sharedPreferences;
 
 
     public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_NO);
         Log.d(TAG, "inside db helper");
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        String createUsersQuery = "create table " + DATABASE_TABLE_USERS + " (" + USERS_NAME + " varchar(50), "
-                + USER_ID + " string, " + USER_NUMBER + " varchar(20) primary key)";
+        String createUsersQuery = "create table " + DATABASE_TABLE_USERS + " (" + USERS_NAME + " string, "
+                + USER_ID + " string, " + USER_NUMBER + " string primary key)";
 
         String createMessagesQuery = "create table " + DATABASE_TABLE_MSGS +
-                "(" + MSG_ID + " integer primary key autoincrement," + FROM_ID + " string," + TO_ID + " string," + MSG + " string)";
+                "(" + MSG_ID + " integer primary key autoincrement," + FROM_ID + " string," + TO_ID + " string," + MSG + " string,"+
+                MY_MSG+" integer)";
         db.execSQL(createUsersQuery);
         Log.d(TAG, "users table created successfully");
         db.execSQL(createMessagesQuery);
@@ -69,10 +75,11 @@ public class DbHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    public boolean insertMessage(String message, String from_id, String to_id) {
+    public boolean insertMessage(String message, String from_id, String to_id,int me) {
+
         String insertQuery = "insert into "
-                + DATABASE_TABLE_MSGS + " (" + FROM_ID + "," + TO_ID + "," + MSG + ") values" +
-                "(" +"\""+ from_id +"\""+ ","+"\"" + to_id+"\"" + ","+"\"" + message +"\""+ ");";
+                + DATABASE_TABLE_MSGS + " (" + FROM_ID + "," + TO_ID + "," + MSG + "," + MY_MSG + ") values" +
+                "(" +"\""+ from_id +"\""+ ","+"\"" + to_id+"\"" + ","+"\"" + message +"\""+ ","+me+");";
 
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL(insertQuery);
@@ -81,8 +88,8 @@ public class DbHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    public ArrayList<String> getAllMessages(String from_id, String to_id) {
-        ArrayList<String> array_list = new ArrayList<>();
+    public ArrayList<MessageData> getAllMessages(String from_id, String to_id) {
+        ArrayList<MessageData> array_list = new ArrayList<>();
 
         Log.d(TAG,"from "+from_id);
 
@@ -102,7 +109,10 @@ public class DbHelper extends SQLiteOpenHelper {
         Log.d(TAG, res.isAfterLast()+"");
 
         while (!res.isAfterLast()) {
-            array_list.add(res.getString(res.getColumnIndex(MSG)));
+            MessageData messageData = new MessageData();
+            messageData.message = res.getString(res.getColumnIndex(MSG));
+            messageData.me = res.getInt(res.getColumnIndex(MY_MSG));
+            array_list.add(messageData);
             Log.d(TAG,res.getString(res.getColumnIndex(MSG)));
             res.moveToNext();
         }

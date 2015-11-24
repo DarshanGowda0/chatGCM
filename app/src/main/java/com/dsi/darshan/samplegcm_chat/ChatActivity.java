@@ -51,20 +51,20 @@ public class ChatActivity extends AppCompatActivity {
         setUpRecView();
         Intent in = getIntent();
         id = in.getStringExtra(Constants.RECEIVED_REG_ID);
-        fetchMessages();
+//        fetchMessages();
 
         setUpBroadcastReceiver();
     }
 
-    private void fetchMessages() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String to = sharedPreferences.getString(Constants.REG_ID,"not available");
-        ArrayList<String> msg = dbHelper.getAllMessages(id, to);
-        for(String message: msg){
-            messages.add(message);
-        }
-        adapter.notifyDataSetChanged();
-    }
+//    private void fetchMessages() {
+//        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+//        String to = sharedPreferences.getString(Constants.REG_ID,"not available");
+////        ArrayList<String> msg = dbHelper.getAllMessages(id, to);
+//        for(String message: msg){
+//            messages.add(message);
+//        }
+//        adapter.notifyDataSetChanged();
+//    }
 
     public void sendMessage(View view) {
 
@@ -201,7 +201,7 @@ public class ChatActivity extends AppCompatActivity {
 
 //                parseJson(Response);
                         Log.d("DARSHAN", Response);
-                        dbHelper.insertMessage(msg,from,to);
+//                        dbHelper.insertMessage(msg,from,to);
 //                parseJSON(Response);
 
                     } else {

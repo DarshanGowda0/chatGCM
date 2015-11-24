@@ -64,7 +64,7 @@ public class MyGcmListenerService extends GcmListenerService {
             e.printStackTrace();
         }
 
-        dbHelper.insertMessage(msg,receiverId,to);
+        dbHelper.insertMessage(msg,receiverId,to,0);
 
 
 
@@ -87,7 +87,10 @@ public class MyGcmListenerService extends GcmListenerService {
 
     private void notifyBroadcast(String message) {
 
-        ChatActivityListView.messages.add(message);
+        MessageData messageData = new MessageData();
+        messageData.message = message;
+        messageData.me = 0;
+        ChatActivityListView.messages.add(messageData);
         Intent mes = new Intent(Constants.MESSAGE_ARRIVED);
         LocalBroadcastManager.getInstance(this).sendBroadcast(mes);
 

@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -39,7 +40,7 @@ import java.util.ArrayList;
 public class ChatActivityListView extends AppCompatActivity {
 
     ListView listView;
-    static ArrayList<String> messages = new ArrayList<>();
+    static ArrayList<MessageData> messages = new ArrayList<>();
     DbHelper dbHelper;
     MyAdapter adapter;
     String id;
@@ -65,7 +66,10 @@ public class ChatActivityListView extends AppCompatActivity {
     public void sendMessage(View view) {
 
         String msg = et.getText().toString();
-        messages.add(msg);
+        MessageData messageData = new MessageData();
+        messageData.message=msg;
+        messageData.me=1;
+        messages.add(messageData);
         adapter.notifyDataSetChanged();
         SharedPreferences mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(ChatActivityListView.this);
         String myRegID = mSharedPreferences.getString(Constants.REG_ID, "reg id missing");
@@ -114,9 +118,10 @@ public class ChatActivityListView extends AppCompatActivity {
     private void fetchMessages() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String to = sharedPreferences.getString(Constants.REG_ID, "not available");
-        ArrayList<String> msg = dbHelper.getAllMessages(id, to);
-        for (String message : msg) {
-            messages.add(message);
+        ArrayList<MessageData> list = dbHelper.getAllMessages(id, to);
+
+        for (int i=0;i<list.size();i++) {
+            messages.add(list.get(i));
         }
         adapter.notifyDataSetChanged();
         scrollMyListViewToBottom();
@@ -127,7 +132,7 @@ public class ChatActivityListView extends AppCompatActivity {
 
         private class ViewHolder {
             TextView tv;
-            RelativeLayout containerLayout;
+            RelativeLayout container;
         }
 
 
@@ -157,15 +162,20 @@ public class ChatActivityListView extends AppCompatActivity {
                 convertView = mInflater.inflate(R.layout.single_list_row,parent,false);
                 holder = new ViewHolder();
                 holder.tv = (TextView) convertView.findViewById(R.id.chatText);
+                holder.container = (RelativeLayout) convertView;
                 convertView.setTag(holder);
             }
             else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            holder.containerLayout = (RelativeLayout) findViewById(R.id.containerLayout);
-//            holder.containerLayout.setGravity(Gravity.END);
-
-            holder.tv.setText(messages.get(position));
+            if(messages.get(position).me == 1){
+                holder.container.setGravity(Gravity.END);
+                holder.tv.setBackgroundResource(R.drawable.right_list_drawable);
+            }else{
+                holder.container.setGravity(Gravity.START);
+                holder.tv.setBackgroundResource(R.drawable.left_list_drawable);
+            }
+            holder.tv.setText(messages.get(position).message);
 
 
             return convertView;
@@ -223,7 +233,7 @@ public class ChatActivityListView extends AppCompatActivity {
 
 //                parseJson(Response);
                         Log.d("DARSHAN", Response);
-                        dbHelper.insertMessage(msg,from,to);
+                        dbHelper.insertMessage(msg,from,to,1);
 //                parseJSON(Response);
 
                     } else {

@@ -12,7 +12,6 @@
             android:id="@+id/chatText"
             android:text="sample text"
             android:textColor="#fff"
-            android:background="@drawable/right_list_drawable"
             android:layout_margin="4dp"
             />
 

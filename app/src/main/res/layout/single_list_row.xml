@@ -2,16 +2,21 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/containerLayout"
     android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/chatText"
-        android:text="sample text"
-        android:textColor="#fff"
-        android:background="@drawable/right_list_drawable"
-        android:layout_margin="4dp"
-        />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/chatText"
+            android:text="sample text"
+            android:textColor="#fff"
+            android:background="@drawable/right_list_drawable"
+            android:layout_margin="4dp"
+            />
+
+
+
 
 </RelativeLayout>

@@ -13,13 +13,16 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
@@ -36,7 +39,7 @@ import java.util.ArrayList;
 public class ChatActivityListView extends AppCompatActivity {
 
     ListView listView;
-    ArrayList<String> messages = new ArrayList<>();
+    static ArrayList<String> messages = new ArrayList<>();
     DbHelper dbHelper;
     MyAdapter adapter;
     String id;
@@ -124,6 +127,7 @@ public class ChatActivityListView extends AppCompatActivity {
 
         private class ViewHolder {
             TextView tv;
+            RelativeLayout containerLayout;
         }
 
 
@@ -158,7 +162,8 @@ public class ChatActivityListView extends AppCompatActivity {
             else {
                 holder = (ViewHolder) convertView.getTag();
             }
-
+            holder.containerLayout = (RelativeLayout) findViewById(R.id.containerLayout);
+//            holder.containerLayout.setGravity(Gravity.END);
 
             holder.tv.setText(messages.get(position));
 

@@ -66,11 +66,7 @@ public class MyGcmListenerService extends GcmListenerService {
 
         dbHelper.insertMessage(msg,receiverId,to);
 
-        if (from.startsWith("/topics/")) {
-            // message received from some topic.
-        } else {
-            // normal downstream message.
-        }
+
 
         // [START_EXCLUDE]
         /**
@@ -91,7 +87,7 @@ public class MyGcmListenerService extends GcmListenerService {
 
     private void notifyBroadcast(String message) {
 
-        ChatActivity.messages.add(message);
+        ChatActivityListView.messages.add(message);
         Intent mes = new Intent(Constants.MESSAGE_ARRIVED);
         LocalBroadcastManager.getInstance(this).sendBroadcast(mes);
 
